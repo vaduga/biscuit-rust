@@ -6,7 +6,7 @@
 //!
 //! code from <https://github.com/rust-lang/rust/issues/48564#issuecomment-698712971>
 
-#[cfg(feature = "wasm")]
+#[cfg(target_arch = "wasm32")]
 use std::convert::TryInto;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 #[cfg(feature = "wasm")]
@@ -47,6 +47,16 @@ export function performance_now() {
 extern "C" {
     fn performance_now() -> f64;
 }
+
+#[cfg(all(target_arch = "wasm32", target_os = "wasi"))]
+fn performance_now() -> f64 {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs_f64()
+}
+
 
 #[cfg(target_arch = "wasm32")]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -105,3 +115,4 @@ impl SubAssign<Duration> for Instant {
         *self = *self - other;
     }
 }
+
