@@ -47,9 +47,10 @@ impl Instant {
 //extern "C" {
 //    fn performance_now() -> f64;
 //}
-//
+
 #[cfg(all(target_arch = "wasm32", target_os = "wasi"))]
-fn performance_now() -> f64 {
+#[cfg(feature = "wasm")]
+pub fn performance_now() -> f64 {
     use std::time::{SystemTime, UNIX_EPOCH};
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
