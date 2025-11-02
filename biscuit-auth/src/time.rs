@@ -9,8 +9,8 @@
 #[cfg(target_arch = "wasm32")]
 use std::convert::TryInto;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
-#[cfg(feature = "wasm")]
-use wasm_bindgen::prelude::*;
+//#[cfg(feature = "wasm")]
+//use wasm_bindgen::prelude::*;
 
 pub use std::time::*;
 
@@ -38,9 +38,9 @@ impl Instant {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
-#[cfg(feature = "wasm")]
-#[wasm_bindgen(inline_js = r#"
+//#[cfg(target_arch = "wasm32")]
+//#[cfg(feature = "wasm")]
+//#[wasm_bindgen(inline_js = r#"
 //export function performance_now() {
 //  return performance.now();
 //}"#)]
@@ -50,7 +50,7 @@ impl Instant {
 
 #[cfg(all(target_arch = "wasm32", target_os = "wasi"))]
 #[cfg(feature = "wasm")]
-pub fn performance_now() -> f64 {
+fn performance_now() -> f64 {
     use std::time::{SystemTime, UNIX_EPOCH};
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -116,4 +116,5 @@ impl SubAssign<Duration> for Instant {
         *self = *self - other;
     }
 }
+
 
