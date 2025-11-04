@@ -192,6 +192,25 @@ impl Biscuit {
         res
     }
 
+    /// MY MODS
+    /// Returns the facts of a block by index as human-readable strings
+    pub fn block_facts(&self, index: usize) -> Result<String, error::Token> {
+        // Get the block via the public method `block()`
+        let block = self.block(index)?;
+
+        // Map each Fact to a string using the token's SymbolTable
+        let facts: Vec<String> = block
+            .facts
+            .iter()
+            .filter(|f| self.symbols.get_symbol(f.predicate.name) == Some("host"))
+            .map(|f| self.symbols.print_term(&f.predicate.terms[0]))
+            .collect();
+
+
+        Ok(facts.get(0).cloned().unwrap_or_default().parse()?)
+    }
+    ///
+
     /// returns an (optional) root key identifier. It provides a hint for public key selection during verification
     pub fn root_key_id(&self) -> Option<u32> {
         self.root_key_id
